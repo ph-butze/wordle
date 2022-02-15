@@ -1,0 +1,1 @@
+cat $1 |sed -e 's/ /\n/g'|sed -e 's/[üÜ]/ue/g'|sed -e 's/[äÄ]/ae/g'|sed -e 's/[öÖ]/oe/g'|sed -e 's/ß/ss/g'|sed -n '/^[[:alpha:]][[:alpha:]][[:alpha:]][[:alpha:]][[:alpha:]]$/p'|tr [:lower:] [:upper:]|uniq
