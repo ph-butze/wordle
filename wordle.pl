@@ -20,15 +20,17 @@ my $DEBUG=0;
 my $WIN = 1;
 
 while ($WIN) {
-    print "Rate das 5 Stellige Wort\n";
+    print "\nRate das 5 Stellige Wort!!!\n";
+    print "-------------------------------------\n";
     $word{verify} = [0,0,0,0,0];
     if (do_guess()) {
         check_letters();
-    }
-    print "WORD: $guess\n";
-    print "HITS: $word{verify}[0]$word{verify}[1]$word{verify}[2]$word{verify}[3]$word{verify}[4]\n";
+        
+        print "WORD: $guess\n";
+        print "HITS: $word{verify}[0]$word{verify}[1]$word{verify}[2]$word{verify}[3]$word{verify}[4]\n";
 
-    check_win();
+        check_win();
+    }
 }
 
 sub check_win {
