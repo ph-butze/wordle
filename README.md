@@ -12,17 +12,17 @@ Target is to guess the 5 Letter word.
 * non existing letters will be '0'
 
 e.g.
- #   #   ###   ###   ###   #     ####  
- #   #  #   #  #  #  #  #  #     #     
- # # #  #   #  #  #  #  #  #     ###   
- ## ##  #   #  # #   #  #  #     #     
- #   #   ###   #  #  ###   ####  ####  
+* #   #   ###   ###   ###   #     ####  
+* #   #  #   #  #  #  #  #  #     #     
+* # # #  #   #  #  #  #  #  #     ###   
+* ## ##  #   #  # #   #  #  #     #     
+* #   #   ###   #  #  ###   ####  ####  
 
-Rate das 5 Stellige Wort!!!
----------------------------
-ABCDEFGHIJKLMNOPQRSTUVWXYZ |       | BAUER
-ABCDEFGHIJKLMNOPQRSTUVWXYZ | BAUER | RATEN
-ABCDEFGHIJKLMNOPQRSTUVWXYZ | RATEN | MAUER
-ABCDEFGHIJKLMNOPQRSTUVWXYZ | MAUER | 
+*Rate das 5 Stellige Wort!!!
+*---------------------------
+*ABCDEFGHIJKLMNOPQRSTUVWXYZ |       | BAUER
+*ABCDEFGHIJKLMNOPQRSTUVWXYZ | BAUER | RATEN
+*ABCDEFGHIJKLMNOPQRSTUVWXYZ | RATEN | MAUER
+*ABCDEFGHIJKLMNOPQRSTUVWXYZ | MAUER | 
 
 
