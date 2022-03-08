@@ -9,25 +9,37 @@
 use strict;
 use warnings;
 use Data::Dumper;
+use if ($^O eq 'linux' || $^O eq 'darwin'), 'Term::ANSIColor'; # LINUX|MAC
+use if ($^O eq 'MSWin32'), 'Win32::Console::ANSI'; # Windows
+use Term::ANSIColor qw(:constants);
+$Term::ANSIColor::AUTORESET = 1;
 
-my @wordlist = `cat wordlist`;
+open(FH, "<", "wordlist") || die "Can't open: $!\n";
+my @wordlist = <FH>;
+close(FH);
+
 chomp(@wordlist);
-my (%word,$guess);
-$word{number} =int(rand(scalar @wordlist));
-$word{letters} =$wordlist[$word{number}];
+my (%abc,%word,@green_letter,$last,$length,$result);
+$word{number}  = int(rand(scalar @wordlist));
+$word{letters} = $wordlist[$word{number}];
 
-my $DEBUG=0;
-my $WIN = 1;
+my $DEBUG  = 0;
+my $WIN    = 1;
+my $guess  = "     ";
+my $string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+map { $abc{$_} = BRIGHT_WHITE . "$_"; } (split //, $string);
+$string = join("", sort(keys %abc));
+
+printf BRIGHT_WHITE."\nRate das 5 Stellige Wort!!!\n";
+printf "---------------------------\n";
+printf "$string | $guess | ".RESET;
 
 while ($WIN) {
-    print "\nRate das 5 Stellige Wort!!!\n";
-    print "-------------------------------------\n";
     $word{verify} = [0,0,0,0,0];
     if (do_guess()) {
         check_letters();
-        
-        print "WORD: $guess\n";
-        print "HITS: $word{verify}[0]$word{verify}[1]$word{verify}[2]$word{verify}[3]$word{verify}[4]\n";
+        printf color_letters();
 
         check_win();
     }
@@ -39,24 +51,36 @@ sub check_win {
     return if ($word{verify}[2] ne 'X'); 
     return if ($word{verify}[3] ne 'X'); 
     return if ($word{verify}[4] ne 'X'); 
-    print "WIN!!!\n";
+    printf BRIGHT_GREEN."WIN!!!\n".RESET;
     $WIN=0;
 }
 
 sub do_guess {
-    $guess = uc(<STDIN>);
-    chomp($guess);
+    $last   = $guess;
+    $length = 0;
+    while ($length != 5){
+        $guess = uc(<STDIN>);
+        chomp($guess);
+        $length = length($guess);
+        if ($length != 5){
+            printf BRIGHT_WHITE."Kein 5 stelliges Wort.\n".RESET;
+            if ($result){ printf $result; }
+            else        { printf BRIGHT_WHITE . "$string |       | ".RESET; }
+        }
+    }
     my $match = grep { /$guess/ } @wordlist;
-    print "Wort nicht gefunden\n" if ($match == 0);
-    
-    return $match;
+    if ($match == 0){
+        $guess = $last;
+        printf BRIGHT_WHITE."Wort nicht gefunden.\n".RESET;
+    }
+    return 1;
 }
 
 sub check_letters {
     print "$guess\n" if ($DEBUG);
     print "$word{letters}\n" if ($DEBUG);
 
-    my @x=split (//, $guess); 
+    my @x=split (//, $guess);
     my @y=split (//, $word{letters}); 
 
     my $match_x = 0;
@@ -77,3 +101,25 @@ sub check_letters {
             $match_x++;
     }
 }
+
+sub color_letters {
+    my $c = 0;
+    my $COLOR;
+    my @letter = split //, $guess;
+       $result = "";
+    while ($c < 5){
+        if    ($word{verify}[$c] eq "0"){ $COLOR = ON_BLACK;  }
+        elsif ($word{verify}[$c] eq "#"){ $COLOR = ON_YELLOW; }
+        elsif ($word{verify}[$c] eq "X"){ $COLOR = ON_GREEN;  }
+        $result .= sprintf $COLOR . $letter[$c];
+
+        if    ($word{verify}[$c] eq "0"){ $abc{$letter[$c]} = BRIGHT_RED    . $letter[$c];                                            }
+        elsif ($word{verify}[$c] eq "#"){ $abc{$letter[$c]} = BRIGHT_YELLOW . $letter[$c] if (! grep /^$letter[$c]$/, @green_letter); }
+        elsif ($word{verify}[$c] eq "X"){ $abc{$letter[$c]} = BRIGHT_GREEN  . $letter[$c]; push @green_letter, $letter[$c];           }
+        $c++;
+    }
+    $string = join("", map { sprintf "%s", $abc{$_}; } sort(keys %abc));
+    $result = sprintf BRIGHT_WHITE . $string . RESET . BRIGHT_WHITE . " | " . RESET . BRIGHT_WHITE . $result . RESET. BRIGHT_WHITE . " | " . RESET;
+    return $result;
+}
+
