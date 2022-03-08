@@ -23,17 +23,24 @@ my (%abc,%word,@green_letter,$last,$length,$result);
 $word{number}  = int(rand(scalar @wordlist));
 $word{letters} = $wordlist[$word{number}];
 
+
 my $DEBUG  = 0;
 my $WIN    = 1;
-my $guess  = "     ";
+my $guess  = '     ';
 my $string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 map { $abc{$_} = BRIGHT_WHITE . "$_"; } (split //, $string);
 $string = join("", sort(keys %abc));
 
+system("clear"); # clear the screen to have a nice game view
+printf BRIGHT_WHITE." #   #   ###   ###   ###   #     ####  \n";
+printf BRIGHT_WHITE." #   #  #   #  #  #  #  #  #     #     \n";
+printf BRIGHT_WHITE." # # #  #   #  #  #  #  #  #     ###   \n";
+printf BRIGHT_WHITE." ## ##  #   #  # #   #  #  #     #     \n";
+printf BRIGHT_WHITE." #   #   ###   #  #  ###   ####  ####  \n";
 printf BRIGHT_WHITE."\nRate das 5 Stellige Wort!!!\n";
 printf "---------------------------\n";
-printf "$string | $guess | ".RESET;
+printf BRIGHT_WHITE."$string | $guess | ".RESET;
 
 while ($WIN) {
     $word{verify} = [0,0,0,0,0];
