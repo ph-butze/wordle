@@ -11,18 +11,19 @@ Target is to guess the 5 Letter word.
 * correct but misplaced letters will be '#'
 * non existing letters will be '0'
 
+```
 e.g.
-* #   #   ###   ###   ###   #     ####  
-* #   #  #   #  #  #  #  #  #     #     
-* # # #  #   #  #  #  #  #  #     ###   
-* ## ##  #   #  # #   #  #  #     #     
-* #   #   ###   #  #  ###   ####  ####  
+ #   #   ###   ###   ###   #     ####  
+ #   #  #   #  #  #  #  #  #     #     
+ # # #  #   #  #  #  #  #  #     ###   
+ ## ##  #   #  # #   #  #  #     #     
+ #   #   ###   #  #  ###   ####  ####  
 
-*Rate das 5 Stellige Wort!!!
-*---------------------------
-*ABCDEFGHIJKLMNOPQRSTUVWXYZ |       | BAUER
-*ABCDEFGHIJKLMNOPQRSTUVWXYZ | BAUER | RATEN
-*ABCDEFGHIJKLMNOPQRSTUVWXYZ | RATEN | MAUER
-*ABCDEFGHIJKLMNOPQRSTUVWXYZ | MAUER | 
-
+Rate das 5 Stellige Wort!!!
+---------------------------
+ABCDEFGHIJKLMNOPQRSTUVWXYZ |       | BAUER
+ABCDEFGHIJKLMNOPQRSTUVWXYZ | BAUER | RATEN
+ABCDEFGHIJKLMNOPQRSTUVWXYZ | RATEN | MAUER
+ABCDEFGHIJKLMNOPQRSTUVWXYZ | MAUER | 
+```
 
