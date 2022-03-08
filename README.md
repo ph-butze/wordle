@@ -7,9 +7,9 @@ Files included:
 
 
 Target is to guess the 5 Letter word.
-* correct letters will be 'X'
-* correct but misplaced letters will be '#'
-* non existing letters will be '0'
+* correct letters will be GREEN
+* correct but misplaced letters will be YELLOW
+* non existing letters will have NO-COLOR
 
 ```
 e.g.
