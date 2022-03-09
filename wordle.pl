@@ -89,23 +89,36 @@ sub check_letters {
 
     my @x=split (//, $guess);
     my @y=split (//, $word{letters}); 
+    my %letter_match_stack;
 
-    my $match_x = 0;
-    foreach my $in (@x) {
     my $match_y = 0;
-        foreach my $out (@y) {
+    foreach my $in (@y) {
+	#first all real hits maintaining letter_match_stack
+    	my $match_x = 0;
+        foreach my $out (@x) {
+            print "CHECK: $in - $out\n" if ($DEBUG);
             if ($in eq $out) {
                 if ($match_y == $match_x) {
                     $word{verify}[$match_x] = 'X';
-                } else {
-                    $word{verify}[$match_x] = '#' if ($word{verify}[$match_x] ne 'X');
+		    $letter_match_stack{$match_y} = 1;
                 }
-                print "check: $in $out\n" if ($DEBUG);
-                print "$match_y - $match_x\n" if ($DEBUG);
+                print "MATCH: $match_x - $match_y\n" if ($DEBUG);
             }
-            $match_y++;
-        }
             $match_x++;
+        }
+	print Dumper \%letter_match_stack if ($DEBUG);
+	
+    	$match_x = 0;
+        foreach my $out (@x) {
+            if ($in eq $out) {
+                $word{verify}[$match_x] = '#' if ($word{verify}[$match_x] ne 'X' and !$letter_match_stack{$match_y});
+		$letter_match_stack{$match_y} = 1;
+                print "MATCH: $match_x - $match_y\n" if ($DEBUG);
+            }
+            $match_x++;
+        }
+	print Dumper \%letter_match_stack if ($DEBUG);
+       	$match_y++;
     }
 }
 
