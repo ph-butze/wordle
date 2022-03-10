@@ -127,7 +127,7 @@ sub color_letters {
     my @letter = split //, $guess;
     $result = "";
     while ($c < 5){
-        if    ($word{verify}[$c] eq "0"){ $COLOR = ON_BLACK;  }
+        if    ($word{verify}[$c] eq "0"){ $COLOR = "";  }
         elsif ($word{verify}[$c] eq "#"){ $COLOR = ON_YELLOW; }
         elsif ($word{verify}[$c] eq "X"){ $COLOR = ON_GREEN;  }
         $result .= sprintf $COLOR . $letter[$c] . RESET;
