@@ -26,7 +26,7 @@ $word{letters} = $wordlist[$word{number}];
 
 my $DEBUG  = 0;
 my $WIN    = 1;
-my $guess  = '     ';
+my $guess = '     ';
 my $string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 map { $abc{$_} = BRIGHT_WHITE . "$_"; } (split //, $string);
@@ -61,7 +61,6 @@ sub check_win {
     printf BRIGHT_GREEN."WIN!!!\n".RESET;
     $WIN=0;
 }
-
 sub do_guess {
     $last   = $guess;
     $length = 0;
@@ -100,7 +99,7 @@ sub check_letters {
             if ($in eq $out) {
                 if ($match_y == $match_x) {
                     $word{verify}[$match_x] = 'X';
-		    $letter_match_stack{$match_y} = 1;
+		    $letter_match_stack{$match_y} = 1; #put the matching elmenet of the to be guessed word onto the stack
                 }
                 print "MATCH: $match_x - $match_y\n" if ($DEBUG);
             }
@@ -111,8 +110,8 @@ sub check_letters {
     	$match_x = 0;
         foreach my $out (@x) {
             if ($in eq $out) {
-                $word{verify}[$match_x] = '#' if ($word{verify}[$match_x] ne 'X' and !$letter_match_stack{$match_y});
-		$letter_match_stack{$match_y} = 1;
+                $word{verify}[$match_x] = '#' if ($word{verify}[$match_x] ne 'X' and !$letter_match_stack{$match_y}); #check also the stack if there was a match before already for that letter
+		$letter_match_stack{$match_y} = 1; #put the matching elmenet of the to be guessed word onto the stack
                 print "MATCH: $match_x - $match_y\n" if ($DEBUG);
             }
             $match_x++;
@@ -126,20 +125,20 @@ sub color_letters {
     my $c = 0;
     my $COLOR;
     my @letter = split //, $guess;
-       $result = "";
+    $result = "";
     while ($c < 5){
         if    ($word{verify}[$c] eq "0"){ $COLOR = ON_BLACK;  }
         elsif ($word{verify}[$c] eq "#"){ $COLOR = ON_YELLOW; }
         elsif ($word{verify}[$c] eq "X"){ $COLOR = ON_GREEN;  }
-        $result .= sprintf $COLOR . $letter[$c];
+        $result .= sprintf $COLOR . $letter[$c] . RESET;
 
         if    ($word{verify}[$c] eq "0"){ $abc{$letter[$c]} = BRIGHT_RED    . $letter[$c];                                            }
         elsif ($word{verify}[$c] eq "#"){ $abc{$letter[$c]} = BRIGHT_YELLOW . $letter[$c] if (! grep /^$letter[$c]$/, @green_letter); }
         elsif ($word{verify}[$c] eq "X"){ $abc{$letter[$c]} = BRIGHT_GREEN  . $letter[$c]; push @green_letter, $letter[$c];           }
         $c++;
     }
+    delete($abc{' '});
     $string = join("", map { sprintf "%s", $abc{$_}; } sort(keys %abc));
     $result = sprintf BRIGHT_WHITE . $string . RESET . BRIGHT_WHITE . " | " . RESET . BRIGHT_WHITE . $result . RESET. BRIGHT_WHITE . " | " . RESET;
     return $result;
 }
-
