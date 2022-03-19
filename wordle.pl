@@ -74,11 +74,17 @@ sub do_guess {
             else        { printf BRIGHT_WHITE . "$string |       | ".RESET; }
         }
     }
-    my $match = grep { /$guess/ } @wordlist;
-    if ($match == 0){
+    if ($guess !~ /[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]/) {
         $guess = $last;
-        printf BRIGHT_WHITE."Wort nicht gefunden.\n".RESET;
+        printf BRIGHT_WHITE."Nur Buchstaben erlaubt.\n".RESET;
+    } else {
+        my $match = grep { /$guess/ } @wordlist;
+        if ($match == 0){
+            $guess = $last;
+            printf BRIGHT_WHITE."Wort nicht gefunden.\n".RESET;
+        }
     }
+
     return 1;
 }
 
@@ -139,6 +145,6 @@ sub color_letters {
     }
     delete($abc{' '});
     $string = join("", map { sprintf "%s", $abc{$_}; } sort(keys %abc));
-    $result = sprintf BRIGHT_WHITE . $string . RESET . BRIGHT_WHITE . " | " . RESET . BRIGHT_WHITE . $result . RESET. BRIGHT_WHITE . " | " . RESET;
+    $result = sprintf BRIGHT_WHITE . $string . RESET . BRIGHT_WHITE . " | " . RESET . $result . RESET. BRIGHT_WHITE . " | " . RESET;
     return $result;
 }
