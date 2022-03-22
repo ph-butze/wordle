@@ -23,7 +23,6 @@ my (%abc,%word,@green_letter,$last,$length,$result);
 $word{number}  = int(rand(scalar @wordlist));
 $word{letters} = $wordlist[$word{number}];
 
-
 my $DEBUG  = 0;
 my $WIN    = 1;
 my $guess = '     ';
@@ -32,15 +31,17 @@ my $string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 map { $abc{$_} = BRIGHT_WHITE . "$_"; } (split //, $string);
 $string = join("", sort(keys %abc));
 
-system("clear"); # clear the screen to have a nice game view
-printf BRIGHT_WHITE." #   #   ###   ###   ###   #     ####  \n";
-printf BRIGHT_WHITE." #   #  #   #  #  #  #  #  #     #     \n";
-printf BRIGHT_WHITE." # # #  #   #  #  #  #  #  #     ###   \n";
-printf BRIGHT_WHITE." ## ##  #   #  # #   #  #  #     #     \n";
-printf BRIGHT_WHITE." #   #   ###   #  #  ###   ####  ####  \n";
-printf BRIGHT_WHITE."\nRate das 5 Stellige Wort!!!\n";
-printf "---------------------------\n";
-printf BRIGHT_WHITE."$string | $guess | ".RESET;
+system("clear") if ($^O eq 'linux' || $^O eq 'darwin'); # clear the screen to have a nice game view
+system("cls")   if ($^O eq 'MSWin32');
+printf BRIGHT_WHITE."\n\n";
+printf BRIGHT_WHITE."    #   #   ###   ###   ###   #     ####  \n";
+printf BRIGHT_WHITE."    #   #  #   #  #  #  #  #  #     #     \n";
+printf BRIGHT_WHITE."    # # #  #   #  #  #  #  #  #     ###   \n";
+printf BRIGHT_WHITE."    ## ##  #   #  # #   #  #  #     #     \n";
+printf BRIGHT_WHITE."    #   #   ###   #  #  ###   ####  ####  \n\n\n";
+printf BRIGHT_WHITE."         Rate das 5 Stellige Wort!!!\n\n";
+printf " ------------------------------------------\n";
+printf BRIGHT_WHITE." $string | " . ON_BRIGHT_BLACK . $guess . RESET . BRIGHT_WHITE . " | " . RESET;
 
 while ($WIN) {
     $word{verify} = [0,0,0,0,0];
@@ -58,9 +59,10 @@ sub check_win {
     return if ($word{verify}[2] ne 'X'); 
     return if ($word{verify}[3] ne 'X'); 
     return if ($word{verify}[4] ne 'X'); 
-    printf BRIGHT_GREEN."WIN!!!\n".RESET;
+    printf BRIGHT_GREEN."WIN!!!\n\n".RESET;
     $WIN=0;
 }
+
 sub do_guess {
     $last   = $guess;
     $length = 0;
@@ -69,19 +71,19 @@ sub do_guess {
         chomp($guess);
         $length = length($guess);
         if ($length != 5){
-            printf BRIGHT_WHITE."Kein 5 stelliges Wort.\n".RESET;
+            printf BRIGHT_WHITE." Kein 5 stelliges Wort.\n".RESET;
             if ($result){ printf $result; }
-            else        { printf BRIGHT_WHITE . "$string |       | ".RESET; }
+            else        { printf BRIGHT_WHITE . " $string |       | ".RESET; }
         }
     }
     if ($guess !~ /[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]/) {
         $guess = $last;
-        printf BRIGHT_WHITE."Nur Buchstaben erlaubt.\n".RESET;
+        printf BRIGHT_WHITE." Nur Buchstaben erlaubt.\n".RESET;
     } else {
         my $match = grep { /$guess/ } @wordlist;
         if ($match == 0){
             $guess = $last;
-            printf BRIGHT_WHITE."Wort nicht gefunden.\n".RESET;
+            printf BRIGHT_WHITE." Wort nicht gefunden.\n".RESET;
         }
     }
 
@@ -133,11 +135,13 @@ sub color_letters {
     my @letter = split //, $guess;
     $result = "";
     while ($c < 5){
-        if    ($word{verify}[$c] eq "0"){ $COLOR = "";  }
-        elsif ($word{verify}[$c] eq "#"){ $COLOR = ON_YELLOW; }
-        elsif ($word{verify}[$c] eq "X"){ $COLOR = ON_GREEN;  }
-        $result .= sprintf $COLOR . $letter[$c] . RESET;
+        #background color for second column
+        if    ($word{verify}[$c] eq "0"){ $COLOR = ON_BRIGHT_BLACK;  }
+        elsif ($word{verify}[$c] eq "#"){ $COLOR = ON_BRIGHT_YELLOW; }
+        elsif ($word{verify}[$c] eq "X"){ $COLOR = ON_BRIGHT_GREEN;  }
+        $result .= sprintf $COLOR . $letter[$c];
 
+        #foreground color for first column
         if    ($word{verify}[$c] eq "0"){ $abc{$letter[$c]} = BRIGHT_RED    . $letter[$c];                                            }
         elsif ($word{verify}[$c] eq "#"){ $abc{$letter[$c]} = BRIGHT_YELLOW . $letter[$c] if (! grep /^$letter[$c]$/, @green_letter); }
         elsif ($word{verify}[$c] eq "X"){ $abc{$letter[$c]} = BRIGHT_GREEN  . $letter[$c]; push @green_letter, $letter[$c];           }
@@ -145,6 +149,6 @@ sub color_letters {
     }
     delete($abc{' '});
     $string = join("", map { sprintf "%s", $abc{$_}; } sort(keys %abc));
-    $result = sprintf BRIGHT_WHITE . $string . RESET . BRIGHT_WHITE . " | " . RESET . $result . RESET. BRIGHT_WHITE . " | " . RESET;
+    $result = sprintf BRIGHT_WHITE . " " . $string . RESET . BRIGHT_WHITE . " | " . RESET . BLACK . $result . RESET. BRIGHT_WHITE . " | " . RESET;
     return $result;
 }
